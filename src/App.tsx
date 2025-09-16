@@ -1,32 +1,26 @@
-import { useQuery } from '@tanstack/react-query';
-import './App.css';
-import { useEffect } from 'react';
-import { type ApiResponseRates } from '../utils/api-scheme';
+import ErrorDialog from './components/errorDialog';
+import RatesTable from './components/ratesTable';
+import ChangeTool from './components/change';
+import type { ExchangeServiceInstance } from './service/exchange';
 
-const fetchExchangeRates = async () => {
-    const response = await fetch('/api/ex-rates');
-
-    return response.ok === true 
-        ? await response.json() as unknown as ApiResponseRates
-        : { success: false } as ApiResponse<never>;
-};
-
-function App() {
-    const { data, isLoading, refetch /* error */ } = useQuery({
-        queryKey: ['exchange-rates'],
-        queryFn: fetchExchangeRates,
-        initialData: { success: false },
-    });
-
-    useEffect(() => {
-        refetch();
-    });
+function App(props: { exchangeService: ExchangeServiceInstance }) {
+    const { data, error, loading } = props.exchangeService.useExchangeRates();
 
     return (
         <div className="App">
-            {isLoading && 'Loading...'}
-            {data.success === true && data.data.join(';')}
-            {data.success === false && 'failed to load data'}
+            <ErrorDialog
+                isActive={loading === false && error === true}
+                errorText="Failed to load resource"
+            />
+            <RatesTable
+                isLoading={loading}
+                rates={error === true ? [] : data}
+            />
+            <ChangeTool
+                isLoading={loading}
+                exchangeService={props.exchangeService}
+                rates={error === true ? [] : data}
+            />
         </div>
     );
 }

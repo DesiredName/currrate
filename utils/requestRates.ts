@@ -28,19 +28,19 @@ function parse(text: string): CurrencyRate[] {
 
     for (let i = 2; i < lines.length; i++) {
         const [
-            country, 
-            currency, 
-            amount, 
-            code, 
+            country,
+            currency,
+            amount,
+            code,
             rate
-        ] = lines[i].split('|') as [string, string, number, string, number];
+        ] = lines[i].split('|');
 
         result.push({
-            country, 
-            currency, 
-            amount, 
-            code, 
-            rate,
+            country,
+            currency,
+            amount: parseFloat(amount),
+            code,
+            rate: parseFloat(rate),
         });
     }
 

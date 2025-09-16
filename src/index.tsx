@@ -2,11 +2,14 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
-
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import './App.css';
+
+import ExchangeAPI from './api/exchange';
+import ExchangeService from './service/exchange';
 
 const queryClient = new QueryClient();
+const exchangeAPI = ExchangeAPI();
+const exchangeService = ExchangeService(exchangeAPI);
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -15,7 +18,7 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
-      <App />
+      <App exchangeService={exchangeService} />
     </QueryClientProvider>
   </React.StrictMode>
 );

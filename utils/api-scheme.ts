@@ -1,11 +1,11 @@
 import { z } from 'zod';
 
-export const ExchangeQueryParameters = z.object({
+export const APIConversionQueryParameters = z.object({
   amount: z.string().nonempty(),
   to: z.string().nonempty(),
 });
 
-export type ExchangeQueryParametersType = z.infer<typeof ExchangeQueryParameters>;
+export type APIConversionQueryParametersType = z.infer<typeof APIConversionQueryParameters>;
 
 export type ApiResponseRates = ApiResponse<CurrencyRate[]>;
-export type ApiResponseExchange = ApiResponse<number>;
+export type ApiResponseConversion = ApiResponse<number>;
