@@ -13,7 +13,7 @@ export default function ExchangeAPI(base: string = ''): ExchangeAPIInstance {
 
         fetchConversionResult: async (params: APIConversionQueryParametersType) => {
             const search = new URLSearchParams(params);
-            const response = await fetch(`${base}/api/ex-rates?${search.toString()}`);
+            const response = await fetch(`${base}/api/ex-change?${search.toString()}`);
 
             return response.ok === true
                 ? ((await response.json()) as unknown as ApiResponseConversion)
