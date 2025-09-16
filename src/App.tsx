@@ -1,26 +1,34 @@
-import React from 'react';
-import logo from './logo.svg';
+import { useQuery } from '@tanstack/react-query';
 import './App.css';
+import { useEffect } from 'react';
+import { type ApiResponseRates } from '../utils/api-scheme';
+
+const fetchExchangeRates = async () => {
+    const response = await fetch('/api/ex-rates');
+
+    return response.ok === true 
+        ? await response.json() as unknown as ApiResponseRates
+        : { success: false } as ApiResponse<never>;
+};
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    const { data, isLoading, refetch /* error */ } = useQuery({
+        queryKey: ['exchange-rates'],
+        queryFn: fetchExchangeRates,
+        initialData: { success: false },
+    });
+
+    useEffect(() => {
+        refetch();
+    });
+
+    return (
+        <div className="App">
+            {isLoading && 'Loading...'}
+            {data.success === true && data.data.join(';')}
+            {data.success === false && 'failed to load data'}
+        </div>
+    );
 }
 
 export default App;
