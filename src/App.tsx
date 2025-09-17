@@ -3,26 +3,29 @@ import RatesTable from './components/ratesTable';
 import ChangeTool from './components/change';
 import type { ExchangeServiceInstance } from './service/exchange';
 
-function App(props: { exchangeService: ExchangeServiceInstance }) {
-    const { data, error, loading } = props.exchangeService.useExchangeRates();
+export default function App(props: { exchangeService: ExchangeServiceInstance }) {
+    const { data, error, setError, loading } =
+        props.exchangeService.useExchangeRates();
 
     return (
-        <div className="App">
+        <div
+            style={{
+                display: 'flex',
+                flexFlow: 'column',
+                justifyContent: 'center',
+                paddingTop: '2rem',
+            }}
+        >
             <ErrorDialog
                 isActive={loading === false && error === true}
-                errorText="Failed to load resource"
+                onClose={() => setError(false)}
             />
-            <RatesTable
-                isLoading={loading}
-                rates={error === true ? [] : data}
-            />
+            <RatesTable isLoading={loading} data={error === true ? [] : data} />
             <ChangeTool
                 isLoading={loading}
+                data={error === true ? [] : data}
                 exchangeService={props.exchangeService}
-                rates={error === true ? [] : data}
             />
         </div>
     );
 }
-
-export default App;

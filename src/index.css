@@ -1,13 +1,14 @@
-@import url('https://fonts.googleapis.com/css2?family=Newsreader:wght@400&display=block');
-
-body {
-  margin: 0;
-  font-family: Newsreader, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+:root {
+    font-size: 14px;
+    color: #444;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+*,
+*::after,
+*::before {
+    box-sizing: border-box;
+    
+    font-family: "Oswald" !important;
+    font-weight: 400;
+    font-style: normal;
 }

@@ -10,11 +10,14 @@ export interface ExchangeServiceInstance {
     useExchangeRates: () => {
         data: CurrencyRate[],
         loading: boolean,
-        error: boolean
+        error: boolean,
+        setError: React.Dispatch<React.SetStateAction<boolean>>
     }
 
     useCurrencyConversion: () => {
+        amount: number;
         setAmount: React.Dispatch<React.SetStateAction<number>>,
+        currency: string;
         setCurrency: React.Dispatch<React.SetStateAction<string>>,
         convertedAmount: number,
         loading: boolean,
@@ -53,12 +56,12 @@ export default function ExchangeService(api: ExchangeAPIInstance): ExchangeServi
                 fetchData();
             }, []);
 
-            return { data, loading, error };
+            return { data, loading, error, setError };
         },
 
         useCurrencyConversion: () => {
             const [loading, setLoading] = useState<boolean>(false);
-            const [amount, setAmount] = useState<number>(0);
+            const [amount, setAmount] = useState<number>(100);
             const [currency, setCurrency] = useState<string>('');
             const [error, setError] = useState<boolean>(false);
             const [convertedAmount, setConvertedAmount] = useState<number>(0);
@@ -95,7 +98,7 @@ export default function ExchangeService(api: ExchangeAPIInstance): ExchangeServi
                 }
             }, [amount, currency]);
 
-            return { setAmount, setCurrency, convertedAmount, loading, error };
+            return { amount, setAmount, currency, setCurrency, convertedAmount, loading, error };
         }
     }
 }
