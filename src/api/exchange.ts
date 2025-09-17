@@ -1,10 +1,10 @@
 import type { ApiResponseConversion, ApiResponseRates, APIConversionQueryParametersType } from "../../utils/api-scheme";
 import type { ExchangeAPIInstance } from "../service/exchange/index";
 
-export default function ExchangeAPI(base: string = ''): ExchangeAPIInstance {
+export default function ExchangeAPI(): ExchangeAPIInstance {
     return {
         fetchExchangeRates: async () => {
-            const response = await fetch(`${base}/api/ex-rates`);
+            const response = await fetch(`/api/ex-rates`);
 
             return response.ok === true
                 ? ((await response.json()) as unknown as ApiResponseRates)
@@ -13,7 +13,7 @@ export default function ExchangeAPI(base: string = ''): ExchangeAPIInstance {
 
         fetchConversionResult: async (params: APIConversionQueryParametersType) => {
             const search = new URLSearchParams(params);
-            const response = await fetch(`${base}/api/ex-change?${search.toString()}`);
+            const response = await fetch(`/api/ex-change?${search.toString()}`);
 
             return response.ok === true
                 ? ((await response.json()) as unknown as ApiResponseConversion)

@@ -85,10 +85,14 @@ export default function ExchangeService(api: ExchangeAPIInstance): ExchangeServi
                     return 0;
                 };
 
-                convert({
+                const handlerID = window.setTimeout(() => convert({
                     to: currency,
                     amount: amount.toString(),
-                })
+                }), 300);
+
+                return () => {
+                    window.clearTimeout(handlerID);
+                }
             }, [amount, currency]);
 
             return { setAmount, setCurrency, convertedAmount, loading, error };
