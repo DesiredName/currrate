@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 
-import RequestRates from './requestRates.js';
+import RequestRates from './utils/requestRates.js';
 import type { ApiResponseConversion, } from '../utils/api-scheme.js';
 import { APIConversionQueryParameters, } from '../utils/api-scheme.js';
 import ConvertAmount from '../src/api/utils/convertAmount.js';

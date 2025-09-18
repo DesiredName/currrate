@@ -1,4 +1,8 @@
-export function currencyCodeToCountryCode(currencyCode: string): string | null {
+export function currencyCodeToCountryCode(currencyCode?: null | string): string | null {
+    if (currencyCode == null || typeof currencyCode !== 'string' || currencyCode.length !== 3) {
+        return null
+    }
+    
     const currencyToCountry = {
         "AED": "AE",
         "AFN": "AF",

@@ -21,6 +21,7 @@
     "jsx": "react-jsx",
     "types": ["./src/types.d.ts"],
     "verbatimModuleSyntax": true,
+    "allowImportingTsExtensions": true
   },
   "include": [
     "src",

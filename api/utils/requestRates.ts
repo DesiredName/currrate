@@ -16,7 +16,7 @@ export default async function RequestRates(serviceUrl: string): Promise<Currency
     return parse(text);
 }
 
-function parse(text: string): CurrencyRate[] {
+export function parse(text: string): CurrencyRate[] {
     const result: CurrencyRate[] = [];
     const lines = text.split('\n').filter(line => line.trim() !== '');
 
@@ -27,20 +27,25 @@ function parse(text: string): CurrencyRate[] {
     }
 
     for (let i = 2; i < lines.length; i++) {
-        const [
-            country,
-            currency,
-            amount,
-            code,
-            rate
-        ] = lines[i].split('|');
+ const line = lines[i].trim();
+        if (!line) continue;
+        
+        const parts = line.split('|');
+        
+        if (parts.length < 5) continue;
+        
+        const amount = parseFloat(parts[2]);
+        const rate = parseFloat(parts[4]);
+        
+        if (isNaN(amount) || isNaN(rate)) continue;
+        if (!parts[0] || !parts[1] || !parts[3]) continue;
 
         result.push({
-            country,
-            currency,
-            amount: parseFloat(amount),
-            code,
-            rate: parseFloat(rate),
+            country: parts[0],
+            currency: parts[1],
+            amount: amount,
+            code: parts[3],
+            rate: rate
         });
     }
 

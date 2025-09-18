@@ -55,7 +55,9 @@ export default function ChangeTool(props: {
                         <Result>...</Result>
                     ): loading ? (
                         <Result>Calculating</Result>
-                    ): error === false ? (
+                    ): currency === '' ? (
+                        <Result>Choose currency</Result>
+                    ) : error === false ? (
                         <Result>
                             {convertedAmount.toFixed(2)} {currency}
                         </Result>
