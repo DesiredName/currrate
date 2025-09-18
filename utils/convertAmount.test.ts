@@ -1,4 +1,4 @@
-import ConvertAmount from "./convertAmount"
+import ConvertAmount from "../src/api/utils/convertAmount"
 
 test('convert amount returns -1 if not float number', () => {
     [undefined, null, '', Symbol, {}, [], false].forEach((input) => {

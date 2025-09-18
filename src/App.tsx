@@ -20,7 +20,10 @@ export default function App(props: { exchangeService: ExchangeServiceInstance })
                 isActive={loading === false && error === true}
                 onClose={() => setError(false)}
             />
-            <RatesTable isLoading={loading} data={error === true ? [] : data} />
+            <RatesTable 
+                isLoading={loading}
+                data={error === true ? [] : data}
+            />
             <ChangeTool
                 isLoading={loading}
                 data={error === true ? [] : data}

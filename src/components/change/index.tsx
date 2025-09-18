@@ -6,7 +6,7 @@ export default function ChangeTool(props: {
     data: CurrencyRate[];
     exchangeService: ExchangeServiceInstance;
 }) {
-    const { amount, setAmount, currency, setCurrency, convertedAmount, error } =
+    const { amount, setAmount, currency, setCurrency, convertedAmount, error, loading } =
         props.exchangeService.useCurrencyConversion();
 
     return (
@@ -37,8 +37,10 @@ export default function ChangeTool(props: {
                         <Select
                             id="toCurrency"
                             aria-label='select currency to convert from CZK'
+                            value={currency}
                             onChange={(e) => setCurrency(e.target.value)}
                         >
+                            <option>Select currency</option>
                             {props.data.map((rate) => (
                                 <option key={`to-${rate.code}`} value={rate.code} aria-label={`convert CZK to ${rate.code}`}>
                                     {rate.code}
@@ -49,9 +51,11 @@ export default function ChangeTool(props: {
 
                     <div style={{ width: '100%', textAlign: 'center' }}>You will get</div>
 
-                    {props.isLoading ? (
-                        <Result>Calculating...</Result>
-                    ) : error === false ? (
+                    {(props.isLoading) ? (
+                        <Result>...</Result>
+                    ): loading ? (
+                        <Result>Calculating</Result>
+                    ): error === false ? (
                         <Result>
                             {convertedAmount.toFixed(2)} {currency}
                         </Result>

@@ -61,7 +61,7 @@ export default function ExchangeService(api: ExchangeAPIInstance): ExchangeServi
 
         useCurrencyConversion: () => {
             const [loading, setLoading] = useState<boolean>(false);
-            const [amount, setAmount] = useState<number>(100);
+            const [amount, setAmount] = useState<number>(1);
             const [currency, setCurrency] = useState<string>('');
             const [error, setError] = useState<boolean>(false);
             const [convertedAmount, setConvertedAmount] = useState<number>(0);
@@ -88,12 +88,15 @@ export default function ExchangeService(api: ExchangeAPIInstance): ExchangeServi
                     return 0;
                 };
 
+                setLoading(true)
+                
                 const handlerID = window.setTimeout(() => convert({
                     to: currency,
                     amount: amount.toString(),
                 }), 300);
-
+                
                 return () => {
+                    setLoading(false)
                     window.clearTimeout(handlerID);
                 }
             }, [amount, currency]);
