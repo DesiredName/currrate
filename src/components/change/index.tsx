@@ -43,7 +43,7 @@ export default function ChangeTool(props: {
                             <option>Select currency</option>
                             {props.data.map((rate) => (
                                 <option key={`to-${rate.code}`} value={rate.code} aria-label={`convert CZK to ${rate.code}`}>
-                                    {rate.code}
+                                    {rate.code} - {rate.country}
                                 </option>
                             ))}
                         </Select>
