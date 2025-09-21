@@ -1,23 +1,10 @@
-import React, { useContext, createContext } from 'react';
+import { useContext, createContext } from 'react';
 import type { ReactNode } from 'react';
 import type { ExchangeServiceInstance } from '../../service/exchange';
 
 interface ExchangeServiceContextType {
-  rates: {
-    data: CurrencyRate[];
-    loading: boolean;
-    error: boolean;
-    setError: React.Dispatch<React.SetStateAction<boolean>>;
-  };
-  conversions: {
-    amount: number;
-    setAmount: React.Dispatch<React.SetStateAction<number>>;
-    currencyCode: string;
-    setCurrencyCode: React.Dispatch<React.SetStateAction<string>>;
-    convertedAmount: number;
-    loading: boolean;
-    error: boolean;
-  };
+  rates: ReturnType<ExchangeServiceInstance['useExchangeRates']>;
+  conversions: ReturnType<ExchangeServiceInstance['useCurrencyConversion']>;
 }
 
 const ExchangeServiceContext = createContext<ExchangeServiceContextType | null>(null);

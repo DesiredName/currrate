@@ -11,3 +11,5 @@ const theme = {
 }
 
 export default theme
+
+export type MainTheme = typeof theme;
