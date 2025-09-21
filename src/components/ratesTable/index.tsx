@@ -2,6 +2,8 @@ import styled from 'styled-components';
 import { shimmer } from '../../theme/animations';
 import ReactCountryFlag from 'react-country-flag';
 import { currencyCodeToCountryCode } from './utils/countryCodeConversion';
+import { useExchangeService } from '../../provider/exchange';
+import { useEffect } from 'react';
 
 const SkeletonRow = () => (
     <SkeletonTableRow>
@@ -29,11 +31,20 @@ const SkeletonRow = () => (
     </SkeletonTableRow>
 );
 
-export default function CurrencyRatesTable(props: {
-    data: CurrencyRate[];
-    isLoading: boolean;
-}) {
-    if (props.isLoading === true) {
+export default function CurrencyRatesTable() {
+    const { rates, conversions } = useExchangeService();
+    const rowId = (code: string) => `code-${code}`
+
+    useEffect(() => {
+        const el = document.getElementById(rowId(conversions.currencyCode));
+
+        if (el) {
+            el.scrollIntoView({ behavior: 'smooth', block: 'center' })
+        }
+    }, [ conversions.currencyCode ])
+
+
+    if (rates.loading === true) {
         return (
             <TableContainer>
                 <TableTitle>Exchage Rates</TableTitle>
@@ -50,7 +61,7 @@ export default function CurrencyRatesTable(props: {
         );
     }
 
-    if (props.data.length === 0) {
+    if (rates.data.length === 0) {
         return (
             <TableContainer>
                 <TableTitle>Exchage Rates</TableTitle>
@@ -75,8 +86,15 @@ export default function CurrencyRatesTable(props: {
                 
             <Table aria-label={`exchange rates table`}>
                 <tbody>
-                    {props.data.map((item, index) => (
-                        <TableRow key={index} aria-label={`exchange rates for ${item.country}`}>
+                    {rates.data.map((item, index) => (
+                        <TableRow 
+                            key={index} 
+                            id={rowId(item.code)}
+                            isSelected={conversions.currencyCode === item.code}
+                            role="button"
+                            aria-label={`exchange rates for ${item.country}`} 
+                            onClick={() => conversions.setCurrencyCode(item.code)}
+                        >
                             <TableCell>
                                 <FlagContainer>
                                     <ReactCountryFlag
@@ -145,7 +163,13 @@ const Table = styled.table`
     border-collapse: collapse;
 `;
 
-const TableRow = styled.tr`
+const TableRow = styled.tr<{ isSelected: boolean }>`
+    ${(props) => props.isSelected && `
+        background-color: rgba(0, 0, 0, 0.1);
+    ` }
+
+    transition: background-color 300ms;
+
     &:hover {
         cursor: pointer;
         transition: background-color 300ms;

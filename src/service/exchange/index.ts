@@ -17,8 +17,8 @@ export interface ExchangeServiceInstance {
     useCurrencyConversion: () => {
         amount: number;
         setAmount: React.Dispatch<React.SetStateAction<number>>,
-        currency: string;
-        setCurrency: React.Dispatch<React.SetStateAction<string>>,
+        currencyCode: string;
+        setCurrencyCode: React.Dispatch<React.SetStateAction<string>>,
         convertedAmount: number,
         loading: boolean,
         error: boolean
@@ -62,7 +62,7 @@ export default function ExchangeService(api: ExchangeAPIInstance): ExchangeServi
         useCurrencyConversion: () => {
             const [loading, setLoading] = useState<boolean>(false);
             const [amount, setAmount] = useState<number>(1);
-            const [currency, setCurrency] = useState<string>('');
+            const [currencyCode, setCurrencyCode] = useState<string>('');
             const [error, setError] = useState<boolean>(false);
             const [convertedAmount, setConvertedAmount] = useState<number>(0);
 
@@ -91,7 +91,7 @@ export default function ExchangeService(api: ExchangeAPIInstance): ExchangeServi
                 setLoading(true)
                 
                 const handlerID = window.setTimeout(() => convert({
-                    to: currency,
+                    to: currencyCode,
                     amount: amount.toString(),
                 }), 300);
                 
@@ -99,9 +99,9 @@ export default function ExchangeService(api: ExchangeAPIInstance): ExchangeServi
                     setLoading(false)
                     window.clearTimeout(handlerID);
                 }
-            }, [amount, currency]);
+            }, [amount, currencyCode]);
 
-            return { amount, setAmount, currency, setCurrency, convertedAmount, loading, error };
+            return { amount, setAmount, currencyCode: currencyCode, setCurrencyCode: setCurrencyCode, convertedAmount, loading, error };
         }
     }
 }

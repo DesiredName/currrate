@@ -1,12 +1,8 @@
 import ErrorDialog from './components/errorDialog';
 import RatesTable from './components/ratesTable';
 import ChangeTool from './components/change';
-import type { ExchangeServiceInstance } from './service/exchange';
 
-export default function App(props: { exchangeService: ExchangeServiceInstance }) {
-    const { data, error, setError, loading } =
-        props.exchangeService.useExchangeRates();
-
+export default function App() {
     return (
         <div
             style={{
@@ -16,19 +12,9 @@ export default function App(props: { exchangeService: ExchangeServiceInstance })
                 paddingTop: '2rem',
             }}
         >
-            <ErrorDialog
-                isActive={loading === false && error === true}
-                onClose={() => setError(false)}
-            />
-            <RatesTable 
-                isLoading={loading}
-                data={error === true ? [] : data}
-            />
-            <ChangeTool
-                isLoading={loading}
-                data={error === true ? [] : data}
-                exchangeService={props.exchangeService}
-            />
+            <ErrorDialog />
+            <RatesTable />
+            <ChangeTool />
         </div>
     );
 }

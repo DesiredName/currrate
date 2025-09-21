@@ -1,17 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';
 import { fadeIn, fadeOut, translateIn, translateOut } from '../../theme/animations';
+import { useExchangeService } from '../../provider/exchange';
 
-export default function ErrorDialog(props: { isActive: boolean, onClose: () => void }) {
+export default function ErrorDialog() {
+    const { rates } = useExchangeService();
     const animtionDurationMS = 300;
 
     const [isExiting, setIsExiting] = useState(false);
     const [isMounted, setIsMounted] = useState(false);
+    const [isActive, setIsActive] = useState(false);
+
+    useEffect(() => {
+        return setIsActive(rates.loading === false && rates.error === true);
+    }, [ rates.loading, rates.error ])
 
     useEffect(() => {
         let timeoutId: number;
 
-        if (props.isActive === true) {
+        if (isActive) {
             setIsMounted(true);
             setIsExiting(false);
         } else if (isMounted === true) {
@@ -27,11 +34,11 @@ export default function ErrorDialog(props: { isActive: boolean, onClose: () => v
                 window.clearTimeout(timeoutId);
             }
         };
-    }, [props.isActive, isMounted]);
+    }, [isActive, isMounted]);
 
     const handleOverlayClick = (e: React.MouseEvent) => {
         if (e.target === e.currentTarget) {
-            props.onClose();
+            rates.setError(false);
         }
     };
 
@@ -41,13 +48,13 @@ export default function ErrorDialog(props: { isActive: boolean, onClose: () => v
 
     return (
         <PopupOverlay
-            isActive={props.isActive}
+            isActive={isActive}
             isExiting={isExiting}
             animDurationMS={animtionDurationMS}
             onClick={handleOverlayClick}
         >
             <PopupContent 
-                isActive={props.isActive}
+                isActive={isActive}
                 isExiting={isExiting}
                 animDurationMS={animtionDurationMS}
             >

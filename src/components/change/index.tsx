@@ -1,13 +1,8 @@
 import styled from 'styled-components';
-import type { ExchangeServiceInstance } from '../../service/exchange';
+import { useExchangeService } from '../../provider/exchange';
 
-export default function ChangeTool(props: {
-    isLoading: boolean;
-    data: CurrencyRate[];
-    exchangeService: ExchangeServiceInstance;
-}) {
-    const { amount, setAmount, currency, setCurrency, convertedAmount, error, loading } =
-        props.exchangeService.useCurrencyConversion();
+export default function ChangeTool() {
+    const service = useExchangeService()
 
     return (
         <div
@@ -15,6 +10,7 @@ export default function ChangeTool(props: {
                 position: 'sticky',
                 bottom: '0',
                 width: '100%',
+                pointerEvents: 'none',
             }}
         >
             <ConverterPlaceholder>
@@ -28,21 +24,27 @@ export default function ChangeTool(props: {
                             step="0.01"
                             autoFocus={true}
                             aria-label='Amount to convert'
-                            value={amount}
-                            onChange={(e) => setAmount(e.target.valueAsNumber)}
+                            value={service.conversions.amount}
+                            onChange={(e) => service.conversions.setAmount(e.target.valueAsNumber)}
                         />
                     </InputGroup>
 
                     <InputGroup>
+                        <div>{service.conversions.currencyCode}</div>
                         <Select
                             id="toCurrency"
                             aria-label='select currency to convert from CZK'
-                            value={currency}
-                            onChange={(e) => setCurrency(e.target.value)}
+                            value={service.conversions.currencyCode}
+                            onChange={(e) => service.conversions.setCurrencyCode(e.target.value)}
                         >
-                            <option>Select currency</option>
-                            {props.data.map((rate) => (
-                                <option key={`to-${rate.code}`} value={rate.code} aria-label={`convert CZK to ${rate.code}`}>
+                            {(service.conversions.currencyCode.trim() === '') ? (
+                                <option>Select currency</option>
+                            ): null}
+                            {service.rates.data.map((rate) => (
+                                <option 
+                                    key={`to-${rate.code}`}
+                                    selected={service.conversions.currencyCode === rate.code}
+                                    value={rate.code} aria-label={`convert CZK to ${rate.code}`}>
                                     {rate.code} - {rate.country}
                                 </option>
                             ))}
@@ -51,15 +53,15 @@ export default function ChangeTool(props: {
 
                     <div style={{ width: '100%', textAlign: 'center' }}>You will get</div>
 
-                    {(props.isLoading) ? (
+                    {(service.rates.loading) ? (
                         <Result>...</Result>
-                    ): loading ? (
+                    ): service.conversions.loading ? (
                         <Result>Calculating</Result>
-                    ): currency === '' ? (
+                    ): service.conversions.currencyCode === '' ? (
                         <Result>Choose currency</Result>
-                    ) : error === false ? (
+                    ) : service.conversions.error === false ? (
                         <Result>
-                            {convertedAmount.toFixed(2)} {currency}
+                            {service.conversions.convertedAmount.toFixed(2)} {service.conversions.currencyCode}
                         </Result>
                     ) : (
                         <ErrorMessage>Service unavailable</ErrorMessage>
@@ -83,6 +85,7 @@ const ConverterContainer = styled.div`
     background: white;
     width: 100%;
     padding: 1rem;
+    pointer-events: all;
     
     @media screen and (min-width: ${(props) => props.theme.breakpoints.md}) {
         width: 20rem;

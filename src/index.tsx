@@ -13,6 +13,7 @@ import ExchangeAPI from './api/exchange';
 import ExchangeService from './service/exchange';
 import LocalExchangeAPI from './api/local.exchange';
 import { ThemeProvider } from 'styled-components';
+import { ExchangeServiceProvider } from './provider/exchange';
 
 const queryClient = new QueryClient();
 const exchangeAPI =
@@ -26,10 +27,12 @@ const root = ReactDOM.createRoot(
 root.render(
     <React.StrictMode>
         <ThemeProvider theme={theme}>
-            <Reset />
-            <QueryClientProvider client={queryClient}>
-                <App exchangeService={exchangeService} />
-            </QueryClientProvider>
+            <ExchangeServiceProvider service={exchangeService}>
+                <Reset />
+                <QueryClientProvider client={queryClient}>
+                    <App />
+                </QueryClientProvider>
+            </ExchangeServiceProvider>
         </ThemeProvider>
     </React.StrictMode>,
 );
